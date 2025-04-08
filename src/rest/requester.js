@@ -41,5 +41,6 @@ module.exports = async function requester(method, url, token, data) {
       // Something else caused the error
       console.error('Error:', error.message);
     }
+    return error;
   };
 }

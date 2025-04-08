@@ -1,7 +1,7 @@
 // src/rest/index.js
-const MatchesRoutes = require('./routes/matches');
-const UsersRoutes = require('./routes/users');
-const requester = require('./requester');
+const MatchesRoutes = require("./routes/MatchesRoutes");
+const UsersRoutes = require("./routes/UsersRoutes");
+const requester = require("./requester");
 
 class REST {
   constructor(options) {
