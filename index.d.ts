@@ -1,0 +1,24 @@
+import { UsersRoutes } from './types/structure/defaults/UserRoutes';
+import { MatchesRoutes } from './types/structure/defaults/MatchesRoutes';
+import { REST } from './types/structure/defaults/REST';
+
+declare interface ApiOptions {
+    // The base URL that will be used to make API requests
+    baseURL?: string;
+
+    // The authentication token to verify your user
+    token: string;
+}
+
+// Exporting API and REST as named exports
+export class RestAPI {
+    constructor(options: ApiOptions);
+
+    // Convenience access to routes
+    get matches(): MatchesRoutes;
+    get users(): UsersRoutes;
+}
+
+export class REST {
+    request(method: string, path: string, body?: any): Promise<any>;
+}
