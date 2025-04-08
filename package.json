@@ -1,9 +1,9 @@
 {
-  "name": "rest-api",
+  "name": "@duque.edits/rest",
   "version": "1.0.0",
   "main": "index.js",
   "keywords": [],
-  "author": "",
+  "author": "Duque edits",
   "license": "ISC",
   "description": "",
   "dependencies": {
@@ -12,6 +12,10 @@
   "types": "./index.d.ts",
   "type": "commonjs",
   "scripts": {
-  "test": "node main.js"
-}
+    "test": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/duque7x/rest-api"
+  }
 }
