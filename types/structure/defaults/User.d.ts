@@ -21,7 +21,7 @@ interface OriginalChannel {
 /**
  * Interface representing a Player's stats and other information in the database.
  */
-export class User extends BaseClass {
+export class User extends BaseClass<User> {
   /**
    * Player's information.
    */
@@ -79,10 +79,16 @@ export class User extends BaseClass {
   originalChannels: OriginalChannel[];
 
   /**
-   * Resets the given key on the database
-   * @param key the user properties like: wins, losses, mvps
+   * Will return user's data
    */
-  reset(key: string): Promise<this>;
+  get data(): this;
+
+  /**
+   * Resets a specific field or all fields if no key is provided
+   * @param key Optional field to reset
+   * @returns this
+   */
+  reset<F extends keyof UserNumericOrCarFields>(key?: F): Promise<this>;
 
   /**
    * Deletes the user's data, cannot be undone
@@ -91,8 +97,9 @@ export class User extends BaseClass {
 
   /**
    * Will increment given field
-   * @param {UserNumericOrCarFields} field
-   * @param amount
+   * @param field The field to increment
+   * @param amount The amount to increment by
+   * @returns this
    */
   increment<F extends keyof UserNumericOrCarFields>(
     field: F,
@@ -101,12 +108,24 @@ export class User extends BaseClass {
 
   /**
    * Will decrement given field
-   * @param {UserNumericOrCarFields} field
-   * @param amount
+   * @param field The field to decrement
+   * @param amount The amount to decrement by
+   * @returns this
    */
   decrement<F extends keyof UserNumericOrCarFields>(
     field: F,
     amount?: number
+  ): Promise<this>;
+
+  /**
+   * Sets the specified field to a given value
+   * @param key The field to set
+   * @param value The value to assign
+   * @returns this
+   */
+  set<F extends keyof UserNumericOrCarFields>(
+    key: F,
+    value: UserNumericOrCarFields[F]
   ): Promise<this>;
 }
 
@@ -115,5 +134,6 @@ type UserNumericOrCarFields = {
   points: number;
   mvps: number;
   losses: number;
-  gamesPlayed: string;
+  gamesPlayed: string[];
+  blacklisted: boolean;
 };

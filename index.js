@@ -18,7 +18,7 @@ class RestAPI {
   }
 
   get users() {
-    return this.rest.users.init();
+    return this.rest.users;
   }
 
   // ... add more shortcuts as you add more route groups

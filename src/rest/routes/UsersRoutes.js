@@ -8,8 +8,6 @@ module.exports = class UserRoutes {
   constructor(rest) {
     this.#rest = rest;
     this.#users = new Collection();
-
-    this.#cacheUsers();
   }
   async init() {
     await this.#cacheUsers();
