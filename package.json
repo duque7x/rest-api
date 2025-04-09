@@ -2,7 +2,10 @@
   "name": "@duque.edits/rest",
   "version": "1.0.0",
   "main": "index.js",
-  "keywords": [],
+  "keywords": [
+    "rest-api",
+    "api"
+  ],
   "author": "Duque edits",
   "license": "ISC",
   "description": "",
@@ -17,5 +20,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/duque7x/rest-api"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
