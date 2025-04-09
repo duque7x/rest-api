@@ -5,15 +5,15 @@ Rest is npm package made for a match based bot
 ## Installation
 
 ```bash
-npm install @duque7x/rest
+npm install @duque.edits/rest
 ```
 
 ## Usage
 
 ```javascript
-const { REST, RestAPI } = require("@duque7x/rest");
-const client = new mod.RestAPI({
-  token: "/mYcFkTs@hQll-a",
+const { RestAPI } = require("@duque.edits/rest");
+const client = new RestAPI({
+  token: "your_token",
   baseURL: "https://yourapi.com/",
 });
 
