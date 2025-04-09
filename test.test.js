@@ -2,7 +2,7 @@ const { REST, RestAPI, BaseClass, UsersRoutes, User } = require("./index.js");
 
 const client = new RestAPI({
   token: "/mYcFkTs@hQll-a",
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "https://duque-bot-api.up.railway.app/api/v1",
 });
 
 client.users.init().then(async (_) => {

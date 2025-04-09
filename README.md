@@ -14,7 +14,7 @@ npm install @duque7x/rest
 const { REST, RestAPI } = require("@duque7x/rest");
 const client = new mod.RestAPI({
   token: "/mYcFkTs@hQll-a",
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "https://yourapi.com/",
 });
 
 const users = async () => {

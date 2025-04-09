@@ -7,7 +7,7 @@ const { MatchesRoutes } = require("./src/rest/routes/MatchesRoutes");
 class RestAPI {
   constructor(options = {}) {
     this.rest = new REST({
-      baseURL: options.baseURL || "https://match.com/api/v1",
+      baseURL: options.baseURL || "https://duque-bot-api.up.railway.app/api/v1",
       token: options.token,
     });
   }
