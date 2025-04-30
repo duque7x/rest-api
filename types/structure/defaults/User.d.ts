@@ -101,10 +101,10 @@ export class User extends BaseClass<User> {
    * @param amount The amount to increment by
    * @returns this
    */
-  increment<F extends keyof UserNumericOrCarFields>(
+  increment<F extends keyof UserNumericOrCarFields, A = UserNumericOrCarFields[F]>(
     field: F,
-    amount?: number
-  ): Promise<this>;
+    amount?: A
+  ): Promise<A>;
 
   /**
    * Will decrement given field
