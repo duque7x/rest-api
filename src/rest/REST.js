@@ -11,6 +11,7 @@ class REST {
     // Inject baseURL/token into all route handlers
     this.matches = new MatchesRoutes(this);
     this.users = new UsersRoutes(this);
+    this.users
   }
 
   request(method, path, data) {

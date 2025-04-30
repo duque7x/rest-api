@@ -85,16 +85,12 @@ export declare class UsersRoutes {
    * REST client used to make HTTP requests.
    */
   rest: REST;
-  
+
   /**
    * Creates a new UsersRoutes instance.
    * @param rest - An instance of the REST client.
    */
   constructor(rest: REST);
-  /**
-   * Initialises the classes inner processes such as: cache and fetches
-   */
-  init(): Promise<this>;
 
   /**
    * Fetches a user by its ID.
@@ -132,4 +128,9 @@ export declare class UsersRoutes {
    * @param payload The data that will be updated on the database
    */
   updateUser(id: string, payload: UserUpdatePayload): Promise<User>;
+
+  /**
+  * Returns all users
+  */
+  cacheUsers(): Promise<Collection<string, User>>
 }

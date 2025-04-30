@@ -16,10 +16,15 @@ export class RestAPI {
   // Convenience access to routes
   get matches(): MatchesRoutes;
   get users(): UsersRoutes;
+  /**
+  * Initialises the classes inner processes such as: cache and fetches
+  */
+  init(): Promise<void>;
 }
 
 export class REST {
   request(method: string, path: string, body?: any): Promise<any>;
+
 }
 
 export * from "./types/structure/defaults/UserRoutes";

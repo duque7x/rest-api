@@ -1,10 +1,10 @@
-const { REST, RestAPI, BaseClass, UsersRoutes, User } = require("./index.js");
+const { RestAPI } = require("./index.js");
 
 const client = new RestAPI({
   token: "/mYcFkTs@hQll-a",
   baseURL: "http://localhost:3000/api/v1/",
 });
-
+console.log(client.init)
 client.users.init().then(async (_) => {
   console.log("User's routes initialized successfully");
   const users = client.users;

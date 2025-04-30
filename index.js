@@ -21,7 +21,9 @@ class RestAPI {
     return this.rest.users;
   }
 
-  // ... add more shortcuts as you add more route groups
+  async init() {
+    await this.users.cacheUsers();
+  }
 }
 
 module.exports = { RestAPI, REST, User, MatchesRoutes, UsersRoutes, BaseClass };

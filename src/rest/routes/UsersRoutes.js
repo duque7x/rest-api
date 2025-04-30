@@ -9,10 +9,6 @@ module.exports = class UserRoutes {
     this.#rest = rest;
     this.#users = new Collection();
   }
-  async init() {
-    await this.#cacheUsers();
-    return this;
-  }
 
   fetch = async (id) => {
     if (!id || typeof id !== "string")
@@ -67,7 +63,7 @@ module.exports = class UserRoutes {
         throw new Error(`payload.player.id user's id must be defined`);
     }
   }
-  async #cacheUsers() {
+  async cacheUsers() {
     const users = await this.#rest.request("GET", "/users");
     if (!users || users.length === 0) return [];
 
@@ -75,6 +71,7 @@ module.exports = class UserRoutes {
       const profile = new User(user, this.#rest);
       this.#users.set(user.player.id, profile);
     }
+    return users;
   }
   async updateUser(id, payload) {
     if (!id || typeof id !== "string") throw new Error("Invalid user ID");
