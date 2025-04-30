@@ -101,7 +101,7 @@ export declare class UsersRoutes {
    * @param id - The unique ID of the user.
    * @returns A promise resolving to the user data.
    */
-  get(id: string): Promise<User>;
+  fetch(id: string): Promise<User>;
 
   /**
    * Returns all users on cache
@@ -119,7 +119,7 @@ export declare class UsersRoutes {
    * Deletes the given user
    * @param id The unique ID of the user.
    */
-  deleteUser(id: string): Promise<void>;
+  delete(id: string): Promise<void>;
 
   /**
    * Deletes all users on the database

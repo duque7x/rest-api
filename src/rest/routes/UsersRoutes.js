@@ -14,7 +14,7 @@ module.exports = class UserRoutes {
     return this;
   }
 
-  get = async (id) => {
+  fetch = async (id) => {
     if (!id || typeof id !== "string")
       throw new Error(`${id} must be an string or a Discord Snowflake`);
 
@@ -22,7 +22,7 @@ module.exports = class UserRoutes {
       await this.#rest.request("GET", `/users/${id}`),
       this.#rest
     );
-  
+
     this.#users.set(id, freshUser);
 
     return freshUser;
@@ -42,7 +42,7 @@ module.exports = class UserRoutes {
     this.#users.set(user.id, user);
     return user;
   };
-  deleteUser = async (id) => {
+  delete = async (id) => {
     this.#verifyPayload("delete", id);
 
     await this.#rest.request("delete", `/users/${id}`);
@@ -69,6 +69,7 @@ module.exports = class UserRoutes {
   }
   async #cacheUsers() {
     const users = await this.#rest.request("GET", "/users");
+    if (!users || users.length === 0) return [];
 
     for (const user of users) {
       const profile = new User(user, this.#rest);
