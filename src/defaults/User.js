@@ -69,7 +69,8 @@ class User extends BaseClass {
     );
 
     this[field] = updatedUser[field];
-    return this;
+    
+    return this[field];
   };
   decrement = async (field, amount = 1) => {
     this.#verifyField(field);
@@ -106,8 +107,7 @@ class User extends BaseClass {
     "blacklisted",
   ];
   #verifyField(field) {
-    if (!this.#validFields.includes(field))
-      throw new Error(`Invalid field "${field}" for update`);
+    if (!this.#validFields.includes(field)) throw new Error(`Invalid field "${field}" for update`);
   }
 }
 
