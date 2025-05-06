@@ -1,3 +1,4 @@
+const { REST } = require("../../..");
 const { Collection } = require("../../defaults/Collection");
 const { User } = require("../../defaults/User");
 
@@ -5,6 +6,10 @@ const { User } = require("../../defaults/User");
 module.exports = class UserRoutes {
   #rest;
   #users;
+  /**
+   * 
+   * @param {REST} rest 
+   */
   constructor(rest) {
     this.#rest = rest;
     this.#users = new Collection();
@@ -26,7 +31,6 @@ module.exports = class UserRoutes {
   get cache() {
     return this.#users;
   }
-
   create = async (payload) => {
     this.#verifyPayload("create", payload);
 
@@ -64,15 +68,26 @@ module.exports = class UserRoutes {
     }
   }
   async cacheUsers() {
-    const users = await this.#rest.request("GET", "/users");
-    if (!users || users.length === 0) return [];
-
-    for (const user of users) {
-      const profile = new User(user, this.#rest);
-      this.#users.set(user.player.id, profile);
-    }
-    return users;
+    const TEN_MINUTES = 10 * 60 * 1000;
+  
+    const requestUsers = async () => {
+      const users = await this.#rest.request("GET", "/users");
+      if (!users || users.code === "ECONNREFUSED") return new Collection();
+      for (const user of users) {
+        this.#users.set(user.player.id, new User(user, this.#rest));
+      }
+    };
+    // First fetch
+    await requestUsers();
+    // Set up periodic refresh
+    setInterval(() => {
+      requestUsers().then(() => {
+        console.log(`[CACHE] Refreshed active users`);
+      }).catch(console.error); // avoid unhandled rejections
+    }, TEN_MINUTES);
+    return this.#users;
   }
+  
   async updateUser(id, payload) {
     if (!id || typeof id !== "string") throw new Error("Invalid user ID");
     if (typeof payload !== "object")

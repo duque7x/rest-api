@@ -22,7 +22,7 @@ class RestAPI {
   }
 
   async init() {
-    await this.users.cacheUsers();
+    return await this.users.cacheUsers();
   }
 }
 

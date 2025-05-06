@@ -24,7 +24,6 @@ export class RestAPI {
 
 export class REST {
   request(method: string, path: string, body?: any): Promise<any>;
-
 }
 
 export * from "./types/structure/defaults/UserRoutes";

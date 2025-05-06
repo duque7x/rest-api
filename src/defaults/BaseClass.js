@@ -3,8 +3,9 @@ class BaseClass {
     constructor(data) {
         this.#data = data;
     }
-
-    toJSON = _ => this.#data;
+    toJSON() {
+        return this.#data;
+    }
 }
 
 module.exports = { BaseClass };

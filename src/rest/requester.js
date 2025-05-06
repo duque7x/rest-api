@@ -10,12 +10,13 @@ module.exports = async function requester(method, url, token, data) {
   const options = {
     method,
     headers,
-    body: data ? JSON.stringify(data) : undefined, // If data exists, stringifying it
+    body: data !== undefined ? JSON.stringify(data) : undefined, // If data exists, stringifying it
   };
 
   try {
     const res = await request(url, options);
-    const responseData = await res.body.json(); // Parse the response body as JSON
+    const responseData = await res.body.json();
+
     return responseData.data;
   } catch (error) {
     if (error instanceof Error) {

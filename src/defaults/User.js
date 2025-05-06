@@ -1,9 +1,15 @@
 const { REST } = require("../..");
 const { BaseClass } = require("./BaseClass");
+const Routes = require("./Routes");
 
 class User extends BaseClass {
   #rest;
   #data;
+  /**
+   * 
+   * @param {*} data 
+   * @param {REST} rest 
+   */
   constructor(data, rest) {
     super(data);
 
@@ -22,7 +28,7 @@ class User extends BaseClass {
   get data() {
     return this.#data;
   }
-  reset = async (key) => {
+  async reset(key) {
     if (!key) {
       const options = {
         wins: 0,
@@ -38,7 +44,7 @@ class User extends BaseClass {
       for (let op in options) {
         await this.#rest.request(
           "delete",
-          `/users/${this.player.id}/${op.toLowerCase()}`
+          Routes.fields(`users`, `${this.player.id}`, `${op.toLowerCase()}`)
         );
         this[op] = options[op];
       }
@@ -49,48 +55,50 @@ class User extends BaseClass {
 
     const reset = await this.#rest.request(
       "delete",
-      `/users/${this.player.id}/${key}`
+      Routes.fields(`users`, `${this.player.id}`, `${key.toLowerCase()}`)
     );
     this[key] = reset;
 
     return this;
   };
-  delete = async () => {
-    await this.#rest.request("delete", `/users/${this.player.id}`);
+  async delete() {
+    await this.#rest.request("delete", Routes.user(this.player.id));
     return;
+
   };
-  increment = async (field, amount = 1) => {
+  async increment(field, amount = 1) {
     this.#verifyField(field);
+    const route = Routes.fields(`users`, `${this.player.id}`, `${field.toLowerCase()}`);
 
     const updatedUser = await this.#rest.request(
       "PATCH",
-      `/users/${this.player.id}/${field.toLowerCase()}`,
+      route,
       { [field]: amount }
     );
 
     this[field] = updatedUser[field];
-    
+
     return this[field];
   };
-  decrement = async (field, amount = 1) => {
+  async decrement(field, amount = 1) {
     this.#verifyField(field);
 
     const updatedUser = await this.#rest.request(
       "PATCH",
-      `/users/${this.player.id}/${field.toLowerCase()}`,
+      Routes.fields(`users`, `${this.player.id}`, `${field.toLowerCase()}`),
       { [field]: -amount }
     );
 
     this[field] = updatedUser[field];
     return this;
   };
-  set = async (key, value) => {
+  async set(key, value) {
     if (typeof key !== "string") throw new Error("key must be a string");
     this.#verifyField(key);
 
     const updatedUser = await this.#rest.request(
       "PATCH",
-      `/users/${this.player.id}/${key.toLowerCase()}`,
+      Routes.fields(`users`, `${this.player.id}`, `${key.toLowerCase()}`),
       { set: value }
     );
 

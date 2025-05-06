@@ -2,6 +2,7 @@
 const MatchesRoutes = require("./routes/MatchesRoutes");
 const UsersRoutes = require("./routes/UsersRoutes");
 const requester = require("./requester");
+const Routes = require("../defaults/Routes");
 
 class REST {
   constructor(options) {
@@ -11,11 +12,10 @@ class REST {
     // Inject baseURL/token into all route handlers
     this.matches = new MatchesRoutes(this);
     this.users = new UsersRoutes(this);
-    this.users
   }
 
   request(method, path, data) {
-    return requester(method, this.baseURL + path, this.token, data);
+    return requester(method, Routes.base + path, this.token, data);
   }
 }
 

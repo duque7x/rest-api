@@ -1,19 +1,18 @@
 const { RestAPI } = require("./index.js");
-
 const client = new RestAPI({
   token: "/mYcFkTs@hQll-a",
-  baseURL: "http://localhost:3000/api/v1/",
+  baseURL: "http://localhost:3000/api/v1",
 });
-console.log(client.init)
-client.users.init().then(async (_) => {
-  console.log("User's routes initialized successfully");
-  const users = client.users;
-  const user = await client.users.create({ player: { id: "877598927149490186" } });
-  //await user.increment("wins", 10)
-  await user.set("blacklisted", true);
 
-  user.increment("wins", 10).then(w => console.log(w));
-  await user.set("blacklisted", false);
+client.init().then(async (_) => {
+  await console.log("User's routes initialized successfully");
+  const user = client.users.cache.get("877598927149490186");
+  //console.log(client.users.cache);
 
-  console.log(user);
+  user.increment("wins", 100).then(w => console.log(`Victory added! Now with ${w}`));
+  user.increment("points", 13500).then(w => console.log(`Points added! Now with ${w}`));
+
+  //client.users.deleteAll().then(m => console.log("User's routes initialized successfully"));
 });
+
+//setInterval(() => {}, 1 << 30); // ~12 days, never runs, keeps process alive

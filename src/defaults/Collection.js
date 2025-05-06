@@ -44,7 +44,6 @@ class Collection extends Map {
     toJSON() {
         return this.map((val) => val.toJSON ? val.toJSON() : val);
     }
-
 }
 
 module.exports = { Collection };
