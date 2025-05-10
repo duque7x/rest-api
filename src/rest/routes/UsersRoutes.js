@@ -1,15 +1,10 @@
-const { REST } = require("../../..");
 const { Collection } = require("../../defaults/Collection");
-const { User } = require("../../defaults/User");
+const { User } = require(".././../defaults/User");
 
 // src/rest/routes/users.js
 module.exports = class UserRoutes {
   #rest;
   #users;
-  /**
-   * 
-   * @param {REST} rest 
-   */
   constructor(rest) {
     this.#rest = rest;
     this.#users = new Collection();
@@ -69,7 +64,7 @@ module.exports = class UserRoutes {
   }
   async cacheUsers() {
     const TEN_MINUTES = 10 * 60 * 1000;
-  
+
     const requestUsers = async () => {
       const users = await this.#rest.request("GET", "/users");
       if (!users || users.code === "ECONNREFUSED") return new Collection();
@@ -87,7 +82,7 @@ module.exports = class UserRoutes {
     }, TEN_MINUTES);
     return this.#users;
   }
-  
+
   async updateUser(id, payload) {
     if (!id || typeof id !== "string") throw new Error("Invalid user ID");
     if (typeof payload !== "object")

@@ -1,5 +1,5 @@
 module.exports = {
-    base: "http://localhost:3000/api/v1",
+    base: "https://duque-bot-api.up.railway.app/api/v1",
     users: "/users",
     matches: "/matches",
     user: id => `/users/${id}`,

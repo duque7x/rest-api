@@ -1,4 +1,3 @@
-const { BaseClass } = require("./src/defaults/BaseClass");
 const { User } = require("./src/defaults/User");
 const { REST } = require("./src/rest/REST");
 const UsersRoutes = require("./src/rest/routes/UsersRoutes");
@@ -26,4 +25,4 @@ class RestAPI {
   }
 }
 
-module.exports = { RestAPI, REST, User, MatchesRoutes, UsersRoutes, BaseClass };
+module.exports = { RestAPI, REST, User, MatchesRoutes, UsersRoutes };

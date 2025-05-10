@@ -1,18 +1,13 @@
-const { REST } = require("../..");
-const { BaseClass } = require("./BaseClass");
 const Routes = require("./Routes");
 
-class User extends BaseClass {
+class User   {
   #rest;
   #data;
   /**
    * 
    * @param {*} data 
-   * @param {REST} rest 
    */
   constructor(data, rest) {
-    super(data);
-
     this.player = data.player;
     this.points = data.points;
     this.wins = data.wins;
