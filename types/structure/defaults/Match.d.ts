@@ -2,12 +2,12 @@
  * Enum representing the possible types of matches based on team sizes.
  */
 declare enum MatchTypesEnum {
-    "1x1" = "1x1",
-    "2x2" = "2x2",
-    "3x3" = "3x3",
-    "4x4" = "4x4",
-    "5x5" = "5x5",
-    "6x6" = "6x6"
+    1 = "1x1",
+    2 = "2x2",
+    3 = "3x3",
+    4 = "4x4",
+    5 = "5x5",
+    6 = "6x6"
 }
 
 /**
@@ -48,6 +48,8 @@ declare interface ConfirmedPlayer {
 
     /** Type of confirmation, e.g., "manual", "auto", etc. */
     typeConfirm: string;
+
+    setted: boolean;
 }
 
 /**
@@ -81,13 +83,13 @@ export declare interface Match {
     voiceChannels: ChannelInfo[];
 
     /** Type of the match (e.g., 1x1, 2x2...) */
-    matchType: MatchTypesEnum;
+    type: MatchTypesEnum;
 
     /** Current status of the match */
     status: MatchStatusTypesEnum;
 
     /** Players who won the match */
-    winnerTeam: MatchPlayers;
+    winnerTeam: string;
 
     /** Maximum number of players allowed in the match */
     maximumSize: number;
@@ -102,7 +104,7 @@ export declare interface Match {
     teamB: MatchPlayers;
 
     /** Players who lost the match */
-    losers: MatchPlayers;
+    losers: string;
 
     /** Team leaders or captains */
     leaders: MatchPlayers;
@@ -114,5 +116,5 @@ export declare interface Match {
     confirmed: ConfirmedPlayer[];
 
     /** Players marked as MVP (Most Valuable Player) */
-    mvp: MatchPlayer;
+    mvpId: string;
 }

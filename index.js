@@ -20,9 +20,24 @@ class RestAPI {
     return this.rest.users;
   }
 
+  get guilds() {
+    return this.rest.guilds;
+  }
+
   async init() {
-    return await this.users.cacheUsers();
+    await this.users.cacheUsers();
+    await this.matches.cacheMatches();
+    await this.guilds.cacheGuilds();
+
+    return this;
   }
 }
-
-module.exports = { RestAPI, REST, User, MatchesRoutes, UsersRoutes };
+const MatchTypes = {
+  1: "1v1",
+  2: "2v2",
+  3: "3v3",
+  4: "4v4",
+  5: "5v5",
+  6: "6v6",
+}
+module.exports = { RestAPI, REST, User, MatchesRoutes, UsersRoutes, MatchTypes };

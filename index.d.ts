@@ -1,5 +1,6 @@
 import { UsersRoutes } from "./types/structure/defaults/UserRoutes";
 import { MatchesRoutes } from "./types/structure/defaults/MatchesRoutes";
+import { GuildsRoutes } from "./types/structure/defaults/GuildRoutes";
 
 declare interface ApiOptions {
   // The base URL that will be used to make API requests
@@ -16,10 +17,11 @@ export class RestAPI {
   // Convenience access to routes
   get matches(): MatchesRoutes;
   get users(): UsersRoutes;
+  get guilds(): GuildsRoutes;
   /**
   * Initialises the classes inner processes such as: cache and fetches
   */
-  init(): Promise<void>;
+  init(): Promise<RestAPI>;
 }
 
 export class REST {
