@@ -1,7 +1,7 @@
 import { CreateGuildPayload } from "../payloads/CreateGuildPayload";
 import { REST } from "../rest/REST";
-import { Collection } from "./Collection";
-import { Guild } from "./Guild";
+import { Collection } from "../structures/Collection";
+import { Guild } from "../structures/Guild";
 
 export class GuildsRoutes {
     constructor(rest: REST): void;

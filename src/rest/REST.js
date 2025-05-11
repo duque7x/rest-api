@@ -1,23 +1,42 @@
 // src/rest/index.js
-const MatchesRoutes = require("./routes/MatchesRoutes");
-const UsersRoutes = require("./routes/UsersRoutes");
-const requester = require("./requester");
-const Routes = require("../defaults/Routes");
-const GuildsRoutes = require("./routes/GuildRoutes");
+const MatchesManager = require("../managers/MatchesManager");
+const UsersManager = require("../managers/UsersManager");
+const GuildsManager = require("../managers/GuildsManager");
+const Routes = require("../rest/Routes");
+const { request } = require('undici');
 
 class REST {
-  constructor(options) {
-    this.token = options.token;
-
-    // Inject baseURL/token into all route handlers
-    this.matches = new MatchesRoutes(this);
-    this.users = new UsersRoutes(this);
-    this.guilds = new GuildsRoutes(this);
+  constructor() {
+    this.matches = new MatchesManager(this);
+    this.users = new UsersManager(this);
+    this.guilds = new GuildsManager(this);
   }
 
-  request(method, path, data) {
-    return requester(method, Routes.base + path, this.token, data);
+  async request(method, path, data) {
+    return await this.requester(method, Routes.base + path, data);
   }
+
+  async requester(method, url, data) {
+    const headers = {
+      Authorization: `Bearer /mYcFkTs@hQll-a`,
+      'Content-Type': 'application/json',
+    };
+
+    const options = {
+      method,
+      headers,
+      body: data !== undefined ? JSON.stringify(data) : undefined,
+    };
+
+    try {
+      const res = await request(url, options);
+      const responseData = await res.body.json();
+      return responseData.data;
+    } catch (error) {
+      if (error instanceof Error) console.error('Error:', error.message);
+      else console.error('Unexpected error occurred:', error);
+      return { error: true, message: error.message || 'Unknown error' };
+    }
+  };
 }
-
 module.exports = { REST };

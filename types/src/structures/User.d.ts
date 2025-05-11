@@ -17,6 +17,14 @@ interface OriginalChannel {
   channelId: string; // The ID of the channel
   matchId: string; // The ID of the match associated with the channel
 }
+type UserNumericOrCarFields = {
+  wins: number;
+  points: number;
+  mvps: number;
+  losses: number;
+  gamesPlayed: string[];
+  blacklisted: boolean;
+};
 
 /**
  * Interface representing a Player's stats and other information in the database.
@@ -103,7 +111,7 @@ export class User extends BaseClass<User> {
    */
   increment<F extends keyof UserNumericOrCarFields, A = UserNumericOrCarFields[F]>(
     field: F,
-    amount?: A
+    amount: A
   ): Promise<A>;
 
   /**
@@ -114,7 +122,7 @@ export class User extends BaseClass<User> {
    */
   decrement<F extends keyof UserNumericOrCarFields>(
     field: F,
-    amount?: number
+    amount: number
   ): Promise<this>;
 
   /**
@@ -129,11 +137,3 @@ export class User extends BaseClass<User> {
   ): Promise<this>;
 }
 
-type UserNumericOrCarFields = {
-  wins: number;
-  points: number;
-  mvps: number;
-  losses: number;
-  gamesPlayed: string[];
-  blacklisted: boolean;
-};

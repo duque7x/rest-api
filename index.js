@@ -1,7 +1,8 @@
-const { User } = require("./src/defaults/User");
+const { User } = require("./src/structures/User");
 const { REST } = require("./src/rest/REST");
-const UsersRoutes = require("./src/rest/routes/UsersRoutes");
-const { MatchesRoutes } = require("./src/rest/routes/MatchesRoutes");
+const UserManager = require("./src/managers/UsersManager");
+const MatchesManager = require("./src/managers/MatchesManager");
+const GuildsManager = require("./src/managers/GuildsManager");
 
 class RestAPI {
   constructor(options = {}) {
@@ -28,7 +29,6 @@ class RestAPI {
     await this.users.cacheUsers();
     await this.matches.cacheMatches();
     await this.guilds.cacheGuilds();
-
     return this;
   }
 }
@@ -40,4 +40,4 @@ const MatchTypes = {
   5: "5v5",
   6: "6v6",
 }
-module.exports = { RestAPI, REST, User, MatchesRoutes, UsersRoutes, MatchTypes };
+module.exports = { RestAPI, REST, User, MatchesManager, UserManager, GuildsManager, MatchTypes };

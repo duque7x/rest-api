@@ -1,8 +1,9 @@
-const { Collection } = require("../../defaults/Collection");
-const { User } = require(".././../defaults/User");
+const { Collection } = require("../structures/Collection");
+const { User } = require("../structures/User");
+const Routes = require("../rest/Routes");
 
 // src/rest/routes/users.js
-module.exports = class UserRoutes {
+module.exports = class UsersManager {
   #rest;
   #users;
   constructor(rest) {
@@ -11,18 +12,13 @@ module.exports = class UserRoutes {
   }
 
   fetch = async (id) => {
-    if (!id || typeof id !== "string")
-      throw new Error(`${id} must be an string or a Discord Snowflake`);
+    if (!id || typeof id !== "string") throw new Error(`${id} must be an string or a Discord Snowflake`);
 
-    const freshUser = new User(
-      await this.#rest.request("GET", `/users/${id}`),
-      this.#rest
-    );
-
-    this.#users.set(id, freshUser);
-
-    return freshUser;
+    const user = new User(await this.#rest.request("GET", Routes.user(id)), this.#rest);
+    this.#users.set(id, user);
+    return user;
   };
+
   get cache() {
     return this.#users;
   }
@@ -30,7 +26,7 @@ module.exports = class UserRoutes {
     this.#verifyPayload("create", payload);
 
     const user = new User(
-      await this.#rest.request("POST", `/users`, payload),
+      await this.#rest.request("POST", Routes.users, payload),
       this.#rest
     );
 
@@ -40,12 +36,12 @@ module.exports = class UserRoutes {
   delete = async (id) => {
     this.#verifyPayload("delete", id);
 
-    await this.#rest.request("delete", `/users/${id}`);
+    await this.#rest.request("delete", Routes.user(id));
     this.#users.delete(id);
     return;
   };
   deleteAll = async () => {
-    await this.#rest.request("delete", `/users`);
+    await this.#rest.request("delete", Routes.user);
     this.#users.clear();
 
     return;
@@ -58,8 +54,8 @@ module.exports = class UserRoutes {
     if (type === "create") {
       if (typeof payload !== "object")
         throw new Error(`${payload} is not an object`);
-      if (!payload.player.id)
-        throw new Error(`payload.player.id user's id must be defined`);
+      if (!payload.id)
+        throw new Error(`payload.id user's id must be defined`);
     }
   }
   async cacheUsers() {
@@ -72,9 +68,8 @@ module.exports = class UserRoutes {
         this.#users.set(user.player.id, new User(user, this.#rest));
       }
     };
-    // First fetch
     await requestUsers();
-    // Set up periodic refresh
+
     setInterval(() => {
       requestUsers().then(() => {
         console.log(`[CACHE] Refreshed active users`);
@@ -83,13 +78,12 @@ module.exports = class UserRoutes {
     return this.#users;
   }
 
-  async updateUser(id, payload) {
+  async update(id, payload) {
     if (!id || typeof id !== "string") throw new Error("Invalid user ID");
-    if (typeof payload !== "object")
-      throw new Error("Payload must be an object");
+    if (typeof payload !== "object") throw new Error("Payload must be an object");
 
     return new User(
-      await this.#rest.request("PATCH", `/users/${id}`, payload),
+      await this.#rest.request("PATCH", Routes.user(id), payload),
       this.#rest
     );
   }

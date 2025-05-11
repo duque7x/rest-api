@@ -1,8 +1,8 @@
-const { Collection } = require("../../defaults/Collection");
-const { Match } = require("../../defaults/Match");
-const Routes = require("../../defaults/Routes");
+const { Collection } = require("../structures/Collection");
+const { Match } = require("../structures/Match");
+const Routes = require("../rest/Routes");
 
-module.exports = class MatchesRoutes {
+module.exports = class MatchesManager {
     #matches;
     #rest;
 
@@ -10,7 +10,14 @@ module.exports = class MatchesRoutes {
         this.#rest = rest;
         this.#matches = new Collection();
     }
+    fetch = async (id) => {
+        if (!id || typeof id !== "string") throw new Error(`${id} must be an string or a Discord Snowflake`);
 
+        const match = new Match(await this.#rest.request("GET", Routes.match(id)), this.#rest);
+        this.#matches.set(id, match);
+
+        return match;
+    };
     async get(id) {
         return new Match(await this.#rest.request('GET', Routes.match(id)), this.#rest);
     }
@@ -26,7 +33,7 @@ module.exports = class MatchesRoutes {
         const TEN_MINUTES = 10 * 60 * 1000;
 
         const requestMatches = async () => {
-            const matches = await this.#rest.request("GET", "/matches");
+            const matches = await this.#rest.request("GET", Routes.matches);
             if (!matches || matches.code === "ECONNREFUSED") return new Collection();
 
             for (const match of matches) {

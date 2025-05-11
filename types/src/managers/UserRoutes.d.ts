@@ -1,7 +1,7 @@
 import { REST } from "./REST";
-import { User } from "./User";
+import { User } from "../structures/User";
 import { UserCreatePayload } from "../payloads/UserCreatePayload";
-import { Collection } from "./Collection";
+import { Collection } from "../structures/Collection";
 
 /**
  * Represents a protection type with additional details.

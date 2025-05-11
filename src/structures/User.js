@@ -1,6 +1,6 @@
-const Routes = require("./Routes");
+const Routes = require("../rest/Routes");
 
-class User   {
+class User {
   #rest;
   #data;
   /**
@@ -65,39 +65,38 @@ class User   {
     this.#verifyField(field);
     const route = Routes.fields(`users`, `${this.player.id}`, `${field.toLowerCase()}`);
 
-    const updatedUser = await this.#rest.request(
+    const updatedField = await this.#rest.request(
       "PATCH",
       route,
       { [field]: amount }
     );
 
-    this[field] = updatedUser[field];
-
+    this[field] = updatedField;
     return this[field];
   };
   async decrement(field, amount = 1) {
     this.#verifyField(field);
 
-    const updatedUser = await this.#rest.request(
+    const updatedField = await this.#rest.request(
       "PATCH",
       Routes.fields(`users`, `${this.player.id}`, `${field.toLowerCase()}`),
       { [field]: -amount }
     );
 
-    this[field] = updatedUser[field];
+    this[field] = updatedField;
     return this;
   };
   async set(key, value) {
     if (typeof key !== "string") throw new Error("key must be a string");
     this.#verifyField(key);
 
-    const updatedUser = await this.#rest.request(
+    const updatedField = await this.#rest.request(
       "PATCH",
       Routes.fields(`users`, `${this.player.id}`, `${key.toLowerCase()}`),
       { set: value }
     );
 
-    this[key] = updatedUser[key];
+    this[key] = updatedField;
 
     return this;
   };
