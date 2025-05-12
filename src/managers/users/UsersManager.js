@@ -1,9 +1,8 @@
-const { Collection } = require("../structures/Collection");
-const { User } = require("../structures/User");
-const Routes = require("../rest/Routes");
+const { Collection } = require("../../structures/Collection");
+const { User } = require("../../structures/User");
+const Routes = require("../../rest/Routes");
 
-// src/rest/routes/users.js
-module.exports = class UsersManager {
+class UsersManager {
   #rest;
   #users;
   constructor(rest) {
@@ -63,7 +62,8 @@ module.exports = class UsersManager {
 
     const requestUsers = async () => {
       const users = await this.#rest.request("GET", "/users");
-      if (!users || users.code === "ECONNREFUSED") return new Collection();
+      
+      if (!users || users.error) return new Collection();
       for (const user of users) {
         this.#users.set(user.player.id, new User(user, this.#rest));
       }
@@ -88,3 +88,5 @@ module.exports = class UsersManager {
     );
   }
 };
+
+module.exports = UsersManager;

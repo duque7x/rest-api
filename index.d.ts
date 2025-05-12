@@ -1,6 +1,7 @@
 import { UsersRoutes } from "./types/src/managers/UserRoutes";
 import { MatchesRoutes } from "./types/src/managers/MatchesRoutes";
 import { GuildsRoutes } from "./types/src/managers/GuildRoutes";
+import EventEmitter from "node:events";
 
 declare interface ApiOptions {
     // The base URL that will be used to make API requests
@@ -11,7 +12,7 @@ declare interface ApiOptions {
 }
 
 // Exporting API and REST as named exports
-export class RestAPI {
+export class RestAPI extends EventEmitter {
     constructor(options: ApiOptions);
 
     // Convenience access to routes

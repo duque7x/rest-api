@@ -1,6 +1,6 @@
-const { Collection } = require("../structures/Collection");
-const { Match } = require("../structures/Match");
-const Routes = require("../rest/Routes");
+const { Collection } = require("../../structures/Collection");
+const { Match } = require("../../structures/Match");
+const Routes = require("../../rest/Routes");
 
 module.exports = class MatchesManager {
     #matches;
@@ -34,7 +34,7 @@ module.exports = class MatchesManager {
 
         const requestMatches = async () => {
             const matches = await this.#rest.request("GET", Routes.matches);
-            if (!matches || matches.code === "ECONNREFUSED") return new Collection();
+            if (!matches || matches.error) return new Collection();
 
             for (const match of matches) {
                 this.#matches.set(match._id, new Match(match, this.#rest));

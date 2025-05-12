@@ -109,7 +109,7 @@ export class User extends BaseClass<User> {
    * @param amount The amount to increment by
    * @returns this
    */
-  increment<F extends keyof UserNumericOrCarFields, A = UserNumericOrCarFields[F]>(
+  add<F extends keyof UserNumericOrCarFields, A = UserNumericOrCarFields[F]>(
     field: F,
     amount: A
   ): Promise<A>;
@@ -120,7 +120,7 @@ export class User extends BaseClass<User> {
    * @param amount The amount to decrement by
    * @returns this
    */
-  decrement<F extends keyof UserNumericOrCarFields>(
+  remove<F extends keyof UserNumericOrCarFields>(
     field: F,
     amount: number
   ): Promise<this>;

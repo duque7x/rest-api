@@ -1,11 +1,14 @@
 const { User } = require("./src/structures/User");
 const { REST } = require("./src/rest/REST");
-const UserManager = require("./src/managers/UsersManager");
-const MatchesManager = require("./src/managers/MatchesManager");
-const GuildsManager = require("./src/managers/GuildsManager");
+const UserManager = require("./src/managers/users/UsersManager");
+const MatchesManager = require("./src/managers/matches/MatchesManager");
+const GuildsManager = require("./src/managers/guilds/GuildsManager");
+const EventEmitter = require("node:events");
 
-class RestAPI {
+class RestAPI extends EventEmitter {
   constructor(options = {}) {
+    super({ captureRejections: true });
+    
     this.rest = new REST({
       baseURL: options.baseURL || "https://duque-bot-api.up.railway.app/api/v1",
       token: options.token,

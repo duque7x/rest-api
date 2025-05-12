@@ -1,7 +1,7 @@
 // src/rest/index.js
-const MatchesManager = require("../managers/MatchesManager");
-const UsersManager = require("../managers/UsersManager");
-const GuildsManager = require("../managers/GuildsManager");
+const MatchesManager = require("../managers/matches/MatchesManager");
+const UsersManager = require("../managers/users/UsersManager");
+const GuildsManager = require("../managers/guilds/GuildsManager");
 const Routes = require("../rest/Routes");
 const { request } = require('undici');
 
@@ -27,7 +27,7 @@ class REST {
       headers,
       body: data !== undefined ? JSON.stringify(data) : undefined,
     };
-
+    
     try {
       const res = await request(url, options);
       const responseData = await res.body.json();

@@ -39,7 +39,7 @@ class User {
       for (let op in options) {
         await this.#rest.request(
           "delete",
-          Routes.fields(`users`, `${this.player.id}`, `${op.toLowerCase()}`)
+          Routes.fields(Routes.users, `${this.player.id}`, `${op.toLowerCase()}`)
         );
         this[op] = options[op];
       }
@@ -50,7 +50,7 @@ class User {
 
     const reset = await this.#rest.request(
       "delete",
-      Routes.fields(`users`, `${this.player.id}`, `${key.toLowerCase()}`)
+      Routes.fields(Routes.users, `${this.player.id}`, `${key.toLowerCase()}`)
     );
     this[key] = reset;
 
@@ -61,9 +61,9 @@ class User {
     return;
 
   };
-  async increment(field, amount = 1) {
+  async add(field, amount = 1) {
     this.#verifyField(field);
-    const route = Routes.fields(`users`, `${this.player.id}`, `${field.toLowerCase()}`);
+    const route = Routes.fields(Routes.users, `${this.player.id}`, `${field.toLowerCase()}`);
 
     const updatedField = await this.#rest.request(
       "PATCH",
@@ -74,12 +74,12 @@ class User {
     this[field] = updatedField;
     return this[field];
   };
-  async decrement(field, amount = 1) {
+  async remove(field, amount = 1) {
     this.#verifyField(field);
 
     const updatedField = await this.#rest.request(
       "PATCH",
-      Routes.fields(`users`, `${this.player.id}`, `${field.toLowerCase()}`),
+      Routes.fields(Routes.users, `${this.player.id}`, `${field.toLowerCase()}`),
       { [field]: -amount }
     );
 
@@ -92,7 +92,7 @@ class User {
 
     const updatedField = await this.#rest.request(
       "PATCH",
-      Routes.fields(`users`, `${this.player.id}`, `${key.toLowerCase()}`),
+      Routes.fields(Routes.users, `${this.player.id}`, `${key.toLowerCase()}`),
       { set: value }
     );
 

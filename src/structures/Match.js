@@ -61,11 +61,11 @@ class Match {
         await this.#rest.request("delete", Routes.match(this._id));
         return;
     };
-    async addPlayer(id) {
+    async addPlayer(id, name) {
         if (!id) throw new Error("no id was provided")
-        await this.#rest.request("patch", Routes.match(this._id), this.players.push({ id }));
-    
-        this.players = this.players.push({ id });
+        const response = await this.#rest.request("post", Routes.match(this._id), { id, name });
+
+        this.players = response;
         return;
     }
 }

@@ -1,6 +1,6 @@
-const { Collection } = require("../structures/Collection");
-const { Guild } = require("../structures/Guild");
-const Routes = require("../rest/Routes");
+const { Collection } = require("../../structures/Collection");
+const { Guild } = require("../../structures/Guild");
+const Routes = require("../../rest/Routes");
 
 module.exports = class GuildsManager {
     #guilds;
@@ -60,10 +60,10 @@ module.exports = class GuildsManager {
 
         const requestGuilds = async () => {
             const guilds = await this.#rest.request("GET", Routes.guilds);
-            if (!guilds || guilds.code === "ECONNREFUSED") return new Collection();
+            if (!guilds || guilds.error) return new Collection();
 
             for (const guild of guilds) {
-                this.#guilds.set(guild._id, new Guild(guild, this.#rest));
+                this.#guilds.set(guild.id, new Guild(guild, this.#rest));
             }
         };
         await requestGuilds();
