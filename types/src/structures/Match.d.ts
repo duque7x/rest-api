@@ -1,15 +1,14 @@
 /**
  * Enum representing the possible types of matches based on team sizes.
  */
-declare enum MatchTypesEnum {
-    1 = "1x1",
-    2 = "2x2",
-    3 = "3x3",
-    4 = "4x4",
-    5 = "5x5",
-    6 = "6x6"
+export enum MatchTypesEnum {
+    OneVOne = "1v1",
+    TwoVTwo = "2v2",
+    ThreeVThree = "3v3",
+    FourVFour = "4v4",
+    FiveVFive = "5v5",
+    SixVSix = "6v6",
 }
-
 /**
  * Enum representing the different status values a match can have.
  */
@@ -23,12 +22,12 @@ declare enum MatchStatusTypesEnum {
 /**
  * Interface representing a single player.
  */
-declare interface MatchPlayer {
+export declare interface MatchPlayer {
     /** The unique Discord user ID of the player */
     id: string;
 
     /** The display name of the player */
-    name: string;
+    name?: string;
 }
 
 /**

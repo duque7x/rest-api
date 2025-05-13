@@ -8,7 +8,7 @@ const EventEmitter = require("node:events");
 class RestAPI extends EventEmitter {
   constructor(options = {}) {
     super({ captureRejections: true });
-    
+
     this.rest = new REST({
       baseURL: options.baseURL || "https://duque-bot-api.up.railway.app/api/v1",
       token: options.token,
@@ -28,19 +28,32 @@ class RestAPI extends EventEmitter {
     return this.rest.guilds;
   }
 
+  get bets() {
+    return this.rest.bets;
+  }
   async init() {
     await this.users.cacheUsers();
     await this.matches.cacheMatches();
     await this.guilds.cacheGuilds();
+    await this.bets.cacheBets();
+
     return this;
   }
 }
 const MatchTypes = {
-  1: "1v1",
-  2: "2v2",
-  3: "3v3",
-  4: "4v4",
-  5: "5v5",
-  6: "6v6",
+  OneVOne: "1v1",
+  TwoVTwo: "2v2",
+  ThreeVThree: "3v3",
+  FourVFour: "4v4",
+  FiveVFive: "5v5",
+  SixVSix: "6v6",
 }
-module.exports = { RestAPI, REST, User, MatchesManager, UserManager, GuildsManager, MatchTypes };
+const BetTypes = {
+  OneVOne: "1v1",
+  TwoVTwo: "2v2",
+  ThreeVThree: "3v3",
+  FourVFour: "4v4",
+  FiveVFive: "5v5",
+  SixVSix: "6v6",
+}
+module.exports = { RestAPI, REST, User, MatchesManager, UserManager, GuildsManager, MatchTypes, BetTypes };

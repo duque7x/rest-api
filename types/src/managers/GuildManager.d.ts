@@ -6,7 +6,7 @@ import { Guild } from "../structures/Guild";
 export class GuildsRoutes {
     constructor(rest: REST): void;
 
-    async get(id: string): Promise<Guild>;
+    async fetch(id: string): Promise<Guild>;
 
     async create(payload: CreateGuildPayload): Promise<Guild>;
 

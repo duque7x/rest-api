@@ -18,13 +18,9 @@ module.exports = class MatchesManager {
 
         return match;
     };
-    async get(id) {
-        return new Match(await this.#rest.request('GET', Routes.match(id)), this.#rest);
-    }
-
     async create(payload) {
         const matchJson = await this.#rest.request('POST', Routes.matches, payload);
-        return new Match(matchJson, this.#rest);
+        return new Match(matchJson._id, this.#rest);
     }
     get cache() {
         return this.#matches;

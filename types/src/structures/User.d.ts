@@ -1,4 +1,3 @@
-import { BaseClass } from "./BaseClass";
 
 /**
  * Represents a protection type with additional details.
@@ -29,7 +28,7 @@ type UserNumericOrCarFields = {
 /**
  * Interface representing a Player's stats and other information in the database.
  */
-export class User extends BaseClass<User> {
+export class User {
   /**
    * Player's information.
    */

@@ -33,14 +33,14 @@ class UsersManager {
     return user;
   };
   delete = async (id) => {
-    this.#verifyPayload("delete", id);
+    this.#verifyPayload("DELETE", id);
 
-    await this.#rest.request("delete", Routes.user(id));
+    await this.#rest.request("DELETE", Routes.user(id));
     this.#users.delete(id);
     return;
   };
   deleteAll = async () => {
-    await this.#rest.request("delete", Routes.user);
+    await this.#rest.request("DELETE", Routes.user);
     this.#users.clear();
 
     return;
@@ -62,7 +62,7 @@ class UsersManager {
 
     const requestUsers = async () => {
       const users = await this.#rest.request("GET", "/users");
-      
+
       if (!users || users.error) return new Collection();
       for (const user of users) {
         this.#users.set(user.player.id, new User(user, this.#rest));

@@ -10,48 +10,45 @@ module.exports = class GuildsManager {
         this.#guilds = new Collection();
     }
 
-    fetch = async (id) => {
-        if (!id || typeof id !== "string")   throw new Error(`${id} must be an string or a Discord Snowflake`);
+    async fetch(id) {
+        if (!id || typeof id !== "string") throw new Error(`${id} must be an string or a Discord Snowflake`);
 
         const guild = new Guild(await this.#rest.request("GET", Routes.guild(id)), this.#rest);
         this.#guilds.set(id, guild);
+
         return guild;
     };
-
-    async get(id) {
-        return new Guild(await this.#rest.request('GET', Routes.guild(id)), this.#rest);
-    }
 
     async create(payload) {
         const guild = new Guild((await this.#rest.request('POST', Routes.guilds, payload)), this.#rest);
 
-        this.#guilds.set(guild._id, guild);        
+        this.#guilds.set(guild._id, guild);
         return guild;
     }
     get cache() {
         return this.#guilds;
     }
 
-    delete = async (id) => {
+    async delete(id) {
         this.#verifyPayload("delete", id);
-        await this.#rest.request("delete", Routes.match(id));
+        await this.#rest.request("DELETE", Routes.guild(id));
 
         this.#guilds.delete(id);
         return;
     };
-    deleteAll = async () => {
-        await this.#rest.request("delete", Routes.matches);
+    async deleteAll() {
+        await this.#rest.request("DELETE", Routes.guilds);
         this.#guilds.clear();
         return;
     };
 
     #verifyPayload(type, payload) {
         if (type === "delete") {
-            if (!payload || typeof payload !== "string") throw new Error(`payload must be match's id not ${payload}`);
+            if (!payload || typeof payload !== "string") throw new Error(`payload must be guild's id not ${payload}`);
         }
         if (type === "create") {
             if (typeof payload !== "object") throw new Error(`${payload} is not an object`);
-            if (!payload.player.id) throw new Error(`payload.player.id match's id must be defined`);
+            if (!payload.id) throw new Error(`payload.id guild's id must be defined`);
         }
     }
 

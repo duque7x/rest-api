@@ -4,12 +4,14 @@ const UsersManager = require("../managers/users/UsersManager");
 const GuildsManager = require("../managers/guilds/GuildsManager");
 const Routes = require("../rest/Routes");
 const { request } = require('undici');
+const BetsManager = require("../managers/bets/BetsManager");
 
 class REST {
   constructor() {
     this.matches = new MatchesManager(this);
     this.users = new UsersManager(this);
     this.guilds = new GuildsManager(this);
+    this.bets = new BetsManager(this);
   }
 
   async request(method, path, data) {
@@ -17,6 +19,8 @@ class REST {
   }
 
   async requester(method, url, data) {
+    console.log({ url });
+    
     const headers = {
       Authorization: `Bearer /mYcFkTs@hQll-a`,
       'Content-Type': 'application/json',
@@ -31,6 +35,8 @@ class REST {
     try {
       const res = await request(url, options);
       const responseData = await res.body.json();
+      console.log({ responseData });
+      
       return responseData.data;
     } catch (error) {
       if (error instanceof Error) console.error('Error:', error.message);

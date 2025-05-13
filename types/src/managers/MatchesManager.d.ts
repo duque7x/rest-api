@@ -22,7 +22,7 @@ export class MatchesRoutes {
    * @param id - The unique ID of the match.
    * @returns A promise resolving to the match data.
    */
-  get(id: string): Promise<Match>;
+  fetch(id: string): Promise<Match>;
 
   /**
    * Creates a new match.
