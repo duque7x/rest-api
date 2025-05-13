@@ -4,6 +4,9 @@ const UserManager = require("./src/managers/users/UsersManager");
 const MatchesManager = require("./src/managers/matches/MatchesManager");
 const GuildsManager = require("./src/managers/guilds/GuildsManager");
 const EventEmitter = require("node:events");
+const { Bet } = require("./src/structures/Bet");
+const { Guild } = require("./src/structures/Guild");
+const { Match } = require("./src/structures/Match");
 
 class RestAPI extends EventEmitter {
   constructor(options = {}) {
@@ -56,4 +59,4 @@ const BetTypes = {
   FiveVFive: "5v5",
   SixVSix: "6v6",
 }
-module.exports = { RestAPI, REST, User, MatchesManager, UserManager, GuildsManager, MatchTypes, BetTypes };
+module.exports = { RestAPI, REST, User, MatchesManager, UserManager, GuildsManager, MatchTypes, BetTypes, Bet, Guild, Match };

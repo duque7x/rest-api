@@ -35,6 +35,8 @@ export * from "./types/src/managers/BetsManager";
 
 export { User } from "./types/src/structures/User";
 export { Guild } from "./types/src/structures/Guild";
+export { Match } from "./types/src/structures/Match";
+export { Bet } from "./types/src/structures/Bet";
 export * from "./types/src/rest/REST";
 //export * from "./src/rest/Request";
 

@@ -75,15 +75,17 @@ class Bet {
     };
     async addPlayer(option) {
         const { id, name } = option;
-        if (!id) throw new Error("no id was provided")
+        if (!id) throw new Error("no id was provided");
+
         const response = await this.#rest
             .request("POST", Routes
                 .fields(Routes.bet(this._id), "players"),
                 { player: { id, name } }
             );
-
+            console.log({ response });
+            
         this.players = response;
-        return;
+        return response;
     }
     async removePlayer(option) {
         const { id, name } = option;
@@ -97,7 +99,7 @@ class Bet {
             );
 
         this.players = response;
-        return;
+        return response;
     }
     #validFields = [
         "channels",
