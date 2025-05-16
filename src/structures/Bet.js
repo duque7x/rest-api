@@ -80,10 +80,10 @@ class Bet {
         const response = await this.#rest
             .request("POST", Routes
                 .fields(Routes.bet(this._id), "players"),
-                { player: { id, name } }
+                { id, name }
             );
-            console.log({ response });
-            
+        console.log({ response });
+
         this.players = response;
         return response;
     }
@@ -94,10 +94,10 @@ class Bet {
             .request("DELETE", Routes
                 .fields(
                     Routes.bet(this._id),
-                    "players"),
-                { player: { id, name } }
+                    "players", id),
             );
 
+        console.log({ response });
         this.players = response;
         return response;
     }
