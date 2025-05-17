@@ -12,8 +12,12 @@ class Bet {
         this.price = data.price;
         this.payedBy = data.payedBy;
         this.createdAt = data.createdAt;
-        this.textChannel = data.textChannel;
-        this.waintingChannel = data.waintingChannel;
+
+        this.channels = {
+            textChannel: data.textChannel,
+            waintingChannel: data.waintingChannel,
+        }
+
         this.type = data.type;
         this.status = data.status;
         this.winners = data.winners;
@@ -22,6 +26,7 @@ class Bet {
         this.teamB = data.teamB;
         this.creatorId = data.creatorId;
         this.adminId = data.adminId;
+        this.confirmed = data.confirmed;
         this._id = data._id;
         this.#rest = rest;
         this.#data = data;
@@ -34,10 +39,20 @@ class Bet {
         return;
 
     };
-    async add(field, amount = 1) {
+    async add(field, amount) {
         this.#verifyField(field);
         const route = Routes.fields(Routes.bets, `${this._id}`, `${field.toLowerCase()}`);
+        if (field === "channels") {
+            console.log({ field, amount });
+            const updatedField = await this.#rest.request(
+                "PATCH",
+                route,
+                { channel: amount }
+            );
+            this[amount.type] = { id: updatedField.id };
 
+            return updatedField;
+        }
         const updatedField = await this.#rest.request(
             "PATCH",
             route,
@@ -47,7 +62,7 @@ class Bet {
         this[field] = updatedField;
         return this[field];
     };
-    async remove(field, amount = 1) {
+    async remove(field, amount) {
         this.#verifyField(field);
 
         const updatedField = await this.#rest.request(
@@ -61,8 +76,28 @@ class Bet {
     };
     async set(key, value) {
         if (typeof key !== "string") throw new Error("key must be a string");
-        this.#verifyField(key);
+        if (!value) throw new Error("where is the value?");
 
+        if (key === "confirmed") {
+            console.log({ key, value });
+
+            if (typeof value !== "object") throw new Error("value must be a object");
+            if (!value.type) throw new Error("where is the value.type?");
+            if (!value.id) throw new Error("where is the value.id?");
+
+            const updatedField = await this.#rest.request(
+                "POST",
+                Routes.fields(Routes.bets, `${this._id}`, `${key.toLowerCase()}`),
+                { entry: { type: value.type, id: value.id } }
+            );
+            this[key] = updatedField;
+            console.log({
+                updatedField
+            });
+            
+            return this;
+        }
+        this.#verifyField(key);
         const updatedField = await this.#rest.request(
             "PATCH",
             Routes.fields(Routes.bets, `${this._id}`, `${key.toLowerCase()}`),
@@ -107,6 +142,7 @@ class Bet {
         "winners",
         "status",
         "players",
+        "confirmed"
     ];
     #verifyField(field) {
         if (!this.#validFields.includes(field)) throw new Error(`Invalid field "${field}" for update`);

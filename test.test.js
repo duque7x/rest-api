@@ -29,9 +29,17 @@ client.init().then(async (_) => {
  */
   //await client.bets.deleteAll();
 
-  console.log({
+  /* console.log({
     BetTypes,
     MatchTypes
+  }); */
+  const bet = client.bets.cache.at(0);
+
+  const textChannel = await bet.add("channels", {
+    id: "1232323",
+    type: "waintingChannel"
   });
+
+  console.log({ textChannel });
   
 });

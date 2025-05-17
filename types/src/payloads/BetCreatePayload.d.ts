@@ -18,7 +18,6 @@ export type BetCreatePayload  = {
     type: BetTypes;
     creatorId: string;
     adminId: string;
-    maximumSize: number;
     price: number;
     players?: BetPlayer[];
 }

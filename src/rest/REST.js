@@ -19,8 +19,6 @@ class REST {
   }
 
   async requester(method, url, data) {
-    console.log({ url });
-    
     const headers = {
       Authorization: `Bearer /mYcFkTs@hQll-a`,
       'Content-Type': 'application/json',
@@ -31,12 +29,12 @@ class REST {
       headers,
       body: data !== undefined ? JSON.stringify(data) : undefined,
     };
-    
+
     try {
       const res = await request(url, options);
       const responseData = await res.body.json();
       console.log({ responseData });
-      
+
       return responseData.data;
     } catch (error) {
       if (error instanceof Error) console.error('Error:', error.message);
