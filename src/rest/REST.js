@@ -8,10 +8,7 @@ const BetsManager = require("../managers/bets/BetsManager");
 
 class REST {
   constructor() {
-    this.matches = new MatchesManager(this);
-    this.users = new UsersManager(this);
     this.guilds = new GuildsManager(this);
-    this.bets = new BetsManager(this);
   }
 
   async request(method, path, data) {
@@ -33,8 +30,6 @@ class REST {
     try {
       const res = await request(url, options);
       const responseData = await res.body.json();
-      console.log({ responseData });
-
       return responseData.data;
     } catch (error) {
       if (error instanceof Error) console.error('Error:', error.message);

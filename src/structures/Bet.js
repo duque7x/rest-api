@@ -90,7 +90,7 @@ class Bet {
                 Routes.fields(Routes.bets, `${this._id}`, `${key.toLowerCase()}`),
                 { entry: { type: value.type, id: value.id } }
             );
-            this[key] = updatedField;
+            this.confirmed = updatedField;
             console.log({
                 updatedField
             });

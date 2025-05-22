@@ -3,7 +3,7 @@ const { REST } = require("./src/rest/REST");
 const UserManager = require("./src/managers/users/UsersManager");
 const MatchesManager = require("./src/managers/matches/MatchesManager");
 const GuildsManager = require("./src/managers/guilds/GuildsManager");
-const EventEmitter = require("node:events");
+const { EventEmitter } = require("node:events");
 const { Bet } = require("./src/structures/Bet");
 const { Guild } = require("./src/structures/Guild");
 const { Match } = require("./src/structures/Match");
@@ -35,11 +35,7 @@ class RestAPI extends EventEmitter {
     return this.rest.bets;
   }
   async init() {
-    await this.users.cacheUsers();
-    await this.matches.cacheMatches();
     await this.guilds.cacheGuilds();
-    await this.bets.cacheBets();
-
     return this;
   }
 }

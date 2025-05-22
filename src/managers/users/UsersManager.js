@@ -5,9 +5,9 @@ const Routes = require("../../rest/Routes");
 class UsersManager {
   #rest;
   #users;
-  constructor(rest) {
+  constructor(rest, data) {
     this.#rest = rest;
-    this.#users = new Collection();
+    this.#users = data;
   }
 
   fetch = async (id) => {

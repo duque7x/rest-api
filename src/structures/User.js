@@ -1,13 +1,15 @@
 const Routes = require("../rest/Routes");
+const assert = require('node:assert');
 
 class User {
   #rest;
   #data;
+  #guildId;
   /**
    * 
    * @param {*} data 
    */
-  constructor(data, rest) {
+  constructor(data, rest, guildId) {
     this.player = data.player;
     this.points = data.points;
     this.wins = data.wins;
@@ -19,6 +21,7 @@ class User {
     this.originalChannels = data.originalChannels;
     this.#rest = rest;
     this.#data = data;
+    this.#guildId = guildId;
   }
   get data() {
     return this.#data;

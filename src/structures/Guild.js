@@ -1,9 +1,15 @@
 const Routes = require("../rest/Routes");
+const { Bet } = require("./Bet");
+const { Collection } = require("./Collection");
+const { Match } = require("./Match");
+const { User } = require("./User");
 
 
 class Guild {
     #rest;
     #data;
+    users;
+
     constructor(data, rest) {
         this.prefix = data?.prefix;
         this.id = data?.id;
@@ -15,6 +21,24 @@ class Guild {
         this._id = data?._id;
         this.#rest = rest;
         this.seasonId = data.seasonId;
+
+        this.users = new Collection();
+        this.betUsers = new Collection();
+        this.bets = new Collection();
+        this.matches = new Collection();
+
+        this.#init(data);
+        console.log({
+            users: this.users,
+            this: this
+        });
+
+    }
+    #init(data) {
+        for (let user of data.users) this.users.set(user.player.id, new User(user, this.#rest, this.id));
+        for (let user of data.betUsers) this.betUsers.set(user.player.id, new User(user, this.#rest, this.id));
+        for (let bet of data.bets) this.bets.set(bet._id, new Bet(bet, this.#rest, this.id));
+        for (let match of data.matches) this.matches.set(match._id, new Match(match, this.#rest, this.id));
 
         this.#autoClean();
     }
@@ -39,6 +63,7 @@ class Guild {
     #autoClean() {
         this.pricesOn = [...new Set(this.pricesOn)].sort((a, b) => a - b);
         this.pricesAvailable = [...new Set(this.pricesAvailable)].sort((a, b) => a - b);
+
     }
 }
 
