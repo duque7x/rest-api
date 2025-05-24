@@ -10,7 +10,7 @@ export class BetUsersManager {
 
   set(id: string, user: BetUser): void;
 
-  fetch(id: string): Promise<BetUser | undefined>;
+  fetch(id: string, name: string): Promise<BetUser | undefined>;
 
   get cache(): Collection<string, BetUser>;
 

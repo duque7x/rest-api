@@ -45,25 +45,4 @@ exports.BetsManager = class BetsManager {
         this.#bets.clear();
         return;
     };
-
-    async cacheBets() {
-        const TEN_MINUTES = 10 * 60 * 1000;
-
-        const requestGuilds = async () => {
-            const bets = await this.#rest.request("GET", Routes.guilds.bets.getAll(this.guildId), payload);
-            if (!bets || bets.error) return new Collection();
-
-            for (const bet of bets) {
-                this.#bets.set(bet._id, new Bet(bet, this.#rest));
-            }
-        };
-        await requestGuilds();
-
-        setInterval(() => {
-            requestGuilds().then(() => {
-                console.log(`[CACHE] Refreshed active bets`);
-            }).catch(console.error);
-        }, TEN_MINUTES);
-        return this.#bets;
-    }
 }

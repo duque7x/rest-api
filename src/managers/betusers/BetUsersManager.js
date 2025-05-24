@@ -10,29 +10,35 @@ class BetUsersManager {
     this.#betUsers = new Collection();
     this.guildId = guildId;
   }
-
+  get cache() {
+    return this.#betUsers;
+  }
   set(id, user) {
     this.#betUsers.set(id, user);
     return;
   }
 
-  fetch = async (id) => {
+  fetch = async (id, name) => {
     if (!id || typeof id !== "string") throw new Error(`${id} must be an string or a Discord Snowflake`);
 
-    const user = new BetUser(await this.#rest.request("GET", Routes.guilds.betUsers.get(id)), this.#rest)
+    const route = Routes.guilds.betUsers.get(id, this.guildId);
+    const payload = { id, name, guildId: this.guildId };
+    const response = await this.#rest.request("GET", route, payload);
+
+    const user = new BetUser(response, this.#rest, this.guildId);
     this.#betUsers.set(id, user);
     return user;
   };
 
-  get cache() {
-    return this.#betUsers;
-  }
+ 
   create = async (payload) => {
     this.#verifyPayload("create", payload);
-
+    const payload1 = { id, name, guildId: this.guildId, ...payload };
+    
     const user = new BetUser(
-      await this.#rest.request("POST", Routes.guilds.betUsers.getAll(this.guildId), payload),
-      this.#rest
+      await this.#rest.request("POST", Routes.guilds.betUsers.getAll(this.guildId), payload1),
+      this.#rest,
+      this.guildId
     );
 
     this.#betUsers.set(user.id, user);
@@ -63,34 +69,14 @@ class BetUsersManager {
         throw new Error(`payload.id user's id must be defined`);
     }
   }
-  async cacheUsers() {
-    const TEN_MINUTES = 10 * 60 * 1000;
-
-    const requestUsers = async () => {
-      const betUsers = await this.#rest.request("GET", Routes.guilds.betUsers.getAll(this.guildId));
-
-      if (!betUsers || betUsers.error) return new Collection();
-      for (const user of betUsers) {
-        this.#betUsers.set(user.player.id, new BetUser(user, this.#rest));
-      }
-    };
-    await requestUsers();
-
-    setInterval(() => {
-      requestUsers().then(() => {
-        console.log(`[CACHE] Refreshed active betUsers`);
-      }).catch(console.error); // avoid unhandled rejections
-    }, TEN_MINUTES);
-    return this.#betUsers;
-  }
-
   async update(id, payload) {
     if (!id || typeof id !== "string") throw new Error("Invalid user ID");
     if (typeof payload !== "object") throw new Error("Payload must be an object");
 
     return new BetUser(
       await this.#rest.request("PATCH", Routes.guilds.betUsers(id, this.guildId), payload),
-      this.#rest
+      this.#rest,
+      this.guildId
     );
   }
 };

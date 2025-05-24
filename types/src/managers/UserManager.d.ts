@@ -97,7 +97,7 @@ export declare class UserManager {
    * @param id - The unique ID of the user.
    * @returns A promise resolving to the user data.
    */
-  fetch(id: string): Promise<User>;
+  fetch(id: string, name: string): Promise<User>;
 
   /**
    * Returns all users on cache

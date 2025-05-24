@@ -8,7 +8,7 @@ const { BetsManager } = require("../managers/bets/BetsManager");
 const { UsersManager } = require("../managers/users/UsersManager");
 const { MatchesManager } = require("../managers/matches/MatchesManager");
 const { BetUsersManager } = require("../managers/betusers/BetUsersManager");
-const { REST } = require("../rest/REST");
+const { BetUser } = require("./BetUser");
 
 class Guild {
     #rest;
@@ -17,9 +17,13 @@ class Guild {
     /**
      * 
      * @param {*} data 
-     * @param {REST} rest 
      */
     constructor(data, rest) {
+        console.log({
+            guild: data
+        });
+        
+
         this.prefix = data?.prefix;
         this.id = data?.id;
         this.name = data?.name;
@@ -29,8 +33,8 @@ class Guild {
         this.#data = data;
         this._id = data?._id;
         this.#rest = rest;
-        this.seasonId = data.seasonId;
-        this.blacklist = data.blacklist;
+        this.seasonId = data?.seasonId;
+        this.blacklist = data?.blacklist;
 
         this.users = new UsersManager(rest, this.id);
         this.betUsers = new BetUsersManager(rest, this.id);
@@ -39,17 +43,42 @@ class Guild {
 
         this.#init();
     }
-    #init() {
-        for (let user of this.#data.users) this.users.set(user?.player?.id, new User(user, this.#rest, this.id));
-        for (let user of this.#data.betUsers) this.betUsers.set(user?.player?.id, new User(user, this.#rest, this.id));
-        for (let bet of this.#data.bets) this.bets.set(bet._id, new Bet(bet, this.#rest, this.id));
-        for (let match of this.#data.matches) this.matches.set(match._id, new Match(match, this.#rest, this.id));
 
+    #init() {
+        const self = this;
+        const id = self.id;
+        console.log({ GUILDDDDid: self.id });
+    
+        for (let user of self.#data?.users ?? []) {
+            self.users.set(
+                user?.player?.id,
+                new User(user, self.#rest, id)
+            );
+        }
+    
+        for (let user of self.#data?.betUsers ?? []) {
+            self.betUsers.set(
+                user?.player?.id,
+                new BetUser(user, self.#rest, id)
+            );
+        }
+    
+        for (let bet of self.#data?.bets ?? []) {
+            self.bets.set(bet?._id, new Bet(bet, self.#rest, id));
+        }
+    
+        for (let match of self.#data?.matches ?? []) {
+            self.matches.set(match?._id, new Match(match, self.#rest, id));
+        }
+    
         this.#autoClean();
     }
+    
+
     get data() {
         return this.#data;
     }
+
     async add(key, value) {
         const route = Routes.guilds.resource(key, this.id);
         const response = await this.#rest.request('PATCH', route, { [key]: value });
@@ -57,21 +86,24 @@ class Guild {
         this.#rest.emit("guildUpdate", response);
         return value;
     }
+
     async remove(key, value) {
         const route = Routes.guilds.resource(key, this.id);
         const response = await this.#rest.request('DELETE', route, { [key]: value });
         this[key] = response;
         return value;
     }
+
     async set(key, value) {
         const route = Routes.guilds.resource(key, this.id);
         const response = await this.#rest.request('PATCH', route, { set: value });
         this[key] = response;
         return value;
     }
+
     #autoClean() {
-        this.pricesOn = [...new Set(this.pricesOn)].sort((a, b) => a - b);
-        this.pricesAvailable = [...new Set(this.pricesAvailable)].sort((a, b) => a - b);
+        this.pricesOn = [...new Set(this.pricesOn ?? [])].sort((a, b) => a - b);
+        this.pricesAvailable = [...new Set(this.pricesAvailable ?? [])].sort((a, b) => a - b);
     }
 }
 

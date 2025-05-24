@@ -1,16 +1,14 @@
 const { Collection } = require("../../structures/Collection");
 const { Guild } = require("../../structures/Guild");
 const Routes = require("../../rest/Routes");
-const { REST } = require("../../rest/REST");
 
 exports.GuildsManager = class GuildsManager {
     #guilds;
     #rest;
     /**
      * 
-     * @param {REST} rest 
      */
-    constructor(rest,) {
+    constructor(rest) {
         this.#rest = rest;
         this.#guilds = new Collection();
     }
@@ -68,6 +66,7 @@ exports.GuildsManager = class GuildsManager {
             if (!guilds || guilds.error) return new Collection();
 
             for (const guild of guilds) {
+                if (!guild.id) continue;
                 this.#guilds.set(guild.id, new Guild(guild, this.#rest));
             }
         };
@@ -75,7 +74,7 @@ exports.GuildsManager = class GuildsManager {
         setInterval(() => {
             requestGuilds().then(() => {
                 console.log(`[CACHE] Refreshed active guilds`);
-            }).catch(console.error); // avoid unhandled rejections
+            }).catch(console.error); 
         }, TEN_MINUTES);
         return this.#guilds;
     }
