@@ -1,26 +1,34 @@
 const { Collection } = require("../../structures/Collection");
 const { Guild } = require("../../structures/Guild");
 const Routes = require("../../rest/Routes");
+const { REST } = require("../../rest/REST");
 
-module.exports = class GuildsManager {
+exports.GuildsManager = class GuildsManager {
     #guilds;
     #rest;
-    constructor(rest) {
+    /**
+     * 
+     * @param {REST} rest 
+     */
+    constructor(rest,) {
         this.#rest = rest;
         this.#guilds = new Collection();
     }
-
+    set(id, guild) {
+        this.#guilds.set(id, guild);
+        return;
+    }
     async fetch(id) {
         if (!id || typeof id !== "string") throw new Error(`${id} must be an string or a Discord Snowflake`);
 
-        const guild = new Guild(await this.#rest.request("GET", Routes.guild(id)), this.#rest);
+        const guild = new Guild(await this.#rest.request("GET", Routes.guilds.get(id)), this.#rest);
         this.#guilds.set(id, guild);
 
         return guild;
     };
 
     async create(payload) {
-        const guild = new Guild((await this.#rest.request('POST', Routes.guilds, payload)), this.#rest);
+        const guild = new Guild((await this.#rest.request('POST', Routes.guilds.getAll(), payload)), this.#rest);
 
         this.#guilds.set(guild._id, guild);
         return guild;
@@ -31,13 +39,13 @@ module.exports = class GuildsManager {
 
     async delete(id) {
         this.#verifyPayload("delete", id);
-        await this.#rest.request("DELETE", Routes.guild(id));
+        await this.#rest.request("DELETE", Routes.guilds.get(id));
 
         this.#guilds.delete(id);
         return;
     };
     async deleteAll() {
-        await this.#rest.request("DELETE", Routes.guilds);
+        await this.#rest.request("DELETE", Routes.guilds.getAll());
         this.#guilds.clear();
         return;
     };
@@ -56,7 +64,7 @@ module.exports = class GuildsManager {
         const TEN_MINUTES = 10 * 60 * 1000;
 
         const requestGuilds = async () => {
-            const guilds = await this.#rest.request("GET", Routes.guilds);
+            const guilds = await this.#rest.request("GET", Routes.guilds.getAll());
             if (!guilds || guilds.error) return new Collection();
 
             for (const guild of guilds) {

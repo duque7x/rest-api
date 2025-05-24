@@ -1,4 +1,4 @@
-export enum BetTypes {
+export enum BETTYPES {
     OneVOne = "1v1",
     TwoVTwo = "2v2",
     ThreeVThree = "3v3",

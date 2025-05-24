@@ -1,3 +1,4 @@
+import { BaseUser } from "./BaseUser";
 
 /**
  * Represents a protection type with additional details.
@@ -28,14 +29,7 @@ type UserNumericOrCarFields = {
 /**
  * Interface representing a Player's stats and other information in the database.
  */
-export class User {
-  /**
-   * Player's information.
-   */
-  player: {
-    name: string; // The player's name
-    id: string; // The player's ID
-  };
+export class User extends BaseUser {
 
   /**
    * The number of points the player has.
@@ -44,34 +38,10 @@ export class User {
   points: number;
 
   /**
-   * The number of wins the player has.
-   * Default: 0
-   */
-  wins: number;
-
-  /**
-   * The number of MVPs the player has achieved.
-   * Default: 0
-   */
-  mvps: number;
-
-  /**
-   * The number of losses the player has suffered.
-   * Default: 0
-   */
-  losses: number;
-
-  /**
    * Array of games played by the player.
    * Default: []
    */
   gamesPlayed: string[];
-
-  /**
-   * Indicates whether the player is blacklisted.
-   * Default: false
-   */
-  blacklisted: boolean;
 
   /**
    * List of protections the player has.
@@ -135,4 +105,3 @@ export class User {
     value: UserNumericOrCarFields[F]
   ): Promise<this>;
 }
-

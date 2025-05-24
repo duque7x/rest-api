@@ -3,43 +3,12 @@ const { REST } = require("./src/rest/REST");
 const UserManager = require("./src/managers/users/UsersManager");
 const MatchesManager = require("./src/managers/matches/MatchesManager");
 const GuildsManager = require("./src/managers/guilds/GuildsManager");
-const { EventEmitter } = require("node:events");
 const { Bet } = require("./src/structures/Bet");
 const { Guild } = require("./src/structures/Guild");
 const { Match } = require("./src/structures/Match");
+const { BetUser } = require("./src/structures/BetUser");
 
-class RestAPI extends EventEmitter {
-  constructor(options = {}) {
-    super({ captureRejections: true });
-
-    this.rest = new REST({
-      baseURL: options.baseURL || "https://duque-bot-api.up.railway.app/api/v1",
-      token: options.token,
-    });
-  }
-
-  // Convenience access to routes
-  get matches() {
-    return this.rest.matches;
-  }
-
-  get users() {
-    return this.rest.users;
-  }
-
-  get guilds() {
-    return this.rest.guilds;
-  }
-
-  get bets() {
-    return this.rest.bets;
-  }
-  async init() {
-    await this.guilds.cacheGuilds();
-    return this;
-  }
-}
-const MatchTypes = {
+const MATCHTYPES = {
   OneVOne: "1v1",
   TwoVTwo: "2v2",
   ThreeVThree: "3v3",
@@ -47,7 +16,7 @@ const MatchTypes = {
   FiveVFive: "5v5",
   SixVSix: "6v6",
 }
-const BetTypes = {
+const BETTYPES = {
   OneVOne: "1v1",
   TwoVTwo: "2v2",
   ThreeVThree: "3v3",
@@ -55,4 +24,27 @@ const BetTypes = {
   FiveVFive: "5v5",
   SixVSix: "6v6",
 }
-module.exports = { RestAPI, REST, User, MatchesManager, UserManager, GuildsManager, MatchTypes, BetTypes, Bet, Guild, Match };
+const STATES = {
+  ON: "on",
+  OFF: "on",
+  CREATED: "created",
+  SHUTTED: "shutted",
+  WAITING: "waiting",
+}
+
+exports.REST = REST;
+
+exports.MatchesManager;
+exports.UserManager = UserManager;
+exports.GuildsManager = GuildsManager;
+exports.MatchesManager = MatchesManager;
+
+exports.Bet = Bet;
+exports.Guild = Guild;
+exports.Match = Match;
+exports.User = User;
+exports.BetUser = BetUser;
+
+exports.STATES = STATES;
+exports.MATCHTYPES = MATCHTYPES;
+exports.BETTYPES = BETTYPES;

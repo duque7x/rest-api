@@ -5,7 +5,7 @@ import { MatchCreatePayload } from "../payloads/MatchCreatePayload";
 /**
  * Routes handler for match-related API operations.
  */
-export class MatchesRoutes {
+export class MatchesManager {
   /**
    * REST client used to make HTTP requests.
    */

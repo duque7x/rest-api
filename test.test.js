@@ -1,18 +1,13 @@
-const { RestAPI, Guild, BetTypes, MatchTypes } = require("./index.js");
-const client = new RestAPI();
+const { REST, Guild, BetTypes, MatchTypes } = require("./index.js");
+const client = new REST();
 const chalk = require("chalk");
 
 client.init().then(async (_) => {
-  //const user = client.users.cache.at(0);
-/* 
-  const textChannel = await bet.add("channels", {
-    id: "1232323",
-    type: "waintingChannel"
+  const guild = client.guilds.cache.get("1341399030282059776");
+  const users = guild.users;
+  client.guilds
+  console.log({
+    users: users.cache
   });
-
-  console.log({ textChannel }); */
-
-  //user.add("blacklisted", true);
-
-  client.guilds.cache.forEach(console.log);
+  
 });

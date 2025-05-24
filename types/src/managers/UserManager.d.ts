@@ -80,7 +80,7 @@ interface UserUpdatePayload {
 /**
  * Routes handler for user-related API operations.
  */
-export declare class UsersRoutes {
+export declare class UserManager {
   /**
    * REST client used to make HTTP requests.
    */

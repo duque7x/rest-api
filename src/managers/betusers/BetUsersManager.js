@@ -1,57 +1,54 @@
 const { Collection } = require("../../structures/Collection");
-const { User } = require("../../structures/User");
+const { BetUser } = require("../../structures/BetUser");
 const Routes = require("../../rest/Routes");
 
-class UsersManager {
+class BetUsersManager {
   #rest;
-  #users;
+  #betUsers;
   constructor(rest, guildId) {
     this.#rest = rest;
-    this.#users = new Collection();
+    this.#betUsers = new Collection();
     this.guildId = guildId;
   }
 
   set(id, user) {
-    this.#users.set(id, user);
+    this.#betUsers.set(id, user);
     return;
   }
 
   fetch = async (id) => {
     if (!id || typeof id !== "string") throw new Error(`${id} must be an string or a Discord Snowflake`);
 
-    const user = new User(
-      await this.#rest.request("GET", Routes.guilds.users.get(id, this.guildId)),
-      this.#rest
-    );
-    if (!this.#users.has(id)) this.#users.set(id, user);
+    const user = new BetUser(await this.#rest.request("GET", Routes.guilds.betUsers.get(id)), this.#rest)
+    this.#betUsers.set(id, user);
     return user;
   };
 
   get cache() {
-    return this.#users;
+    return this.#betUsers;
   }
   create = async (payload) => {
     this.#verifyPayload("create", payload);
 
-    const user = new User(
-      await this.#rest.request("POST", Routes.guilds.users.create(this.guildId), payload),
+    const user = new BetUser(
+      await this.#rest.request("POST", Routes.guilds.betUsers.getAll(this.guildId), payload),
       this.#rest
     );
 
-    this.#users.set(user.id, user);
+    this.#betUsers.set(user.id, user);
     return user;
   };
   delete = async (id) => {
     this.#verifyPayload("DELETE", id);
-    await this.#rest.request("DELETE", Routes.guilds.users.get(id, this.guildId), {
-      guildId: this.guildId
-    });
-    this.#users.delete(id);
+
+    await this.#rest.request("DELETE", Routes.guilds.betUsers.delete(id, this.guildId));
+    this.#betUsers.delete(id);
     return;
   };
   deleteAll = async () => {
-    await this.#rest.request("DELETE", Routes.guilds.users.deleteAll(this.guildId));
-    this.#users.clear();
+    await this.#rest.request("DELETE", Routes.guilds.betUsers.deleteAll(this.guildId));
+    this.#betUsers.clear();
+
     return;
   };
   #verifyPayload(type, payload) {
@@ -70,31 +67,32 @@ class UsersManager {
     const TEN_MINUTES = 10 * 60 * 1000;
 
     const requestUsers = async () => {
-      const users = await this.#rest.request("GET", Routes.guilds.users.getAll(this.guildId));
+      const betUsers = await this.#rest.request("GET", Routes.guilds.betUsers.getAll(this.guildId));
 
-      if (!users || users.error) return new Collection();
-      for (const user of users) {
-        this.#users.set(user.player.id, new User(user, this.#rest));
+      if (!betUsers || betUsers.error) return new Collection();
+      for (const user of betUsers) {
+        this.#betUsers.set(user.player.id, new BetUser(user, this.#rest));
       }
     };
     await requestUsers();
 
     setInterval(() => {
       requestUsers().then(() => {
-        console.log(`[CACHE] Refreshed active users`);
+        console.log(`[CACHE] Refreshed active betUsers`);
       }).catch(console.error); // avoid unhandled rejections
     }, TEN_MINUTES);
-    return this.#users;
+    return this.#betUsers;
   }
 
   async update(id, payload) {
     if (!id || typeof id !== "string") throw new Error("Invalid user ID");
     if (typeof payload !== "object") throw new Error("Payload must be an object");
 
-    return new User(
-      await this.#rest.request("PATCH", Routes.guilds.users.get(id, this.guildId), payload),
+    return new BetUser(
+      await this.#rest.request("PATCH", Routes.guilds.betUsers(id, this.guildId), payload),
       this.#rest
     );
   }
 };
-exports.UsersManager = UsersManager;
+
+exports.BetUsersManager = BetUsersManager;

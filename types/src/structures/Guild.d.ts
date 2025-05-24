@@ -1,3 +1,7 @@
+import { MatchesManager } from "../managers/MatchesManager";
+import { UserManager } from "../managers/UserManager";
+import { BetsManager } from "../managers/BetsManager";
+import { BetUsersManager } from "../managers/BetUsersManager";
 import { REST } from "../rest/REST";
 
 interface GuildData {
@@ -25,37 +29,40 @@ export class Guild {
     _id: string;
     pricesOn: number[];
     pricesAvailable: number[];
-    state: {
-        matcheStatus: string,
-        rankStatus: string
-    };
-    #data: string;
+    state: { matcheStatus: string, rankStatus: string };
+
+    users: UserManager;
+    betUsers: BetUsersManager;
+    bets: BetsManager;
+    matches: MatchesManager;
+
     constructor(data: GuildData, rest: REST);
 
     get data(): GuildData;
 
-     add<F extends keyof KeysAvailable, A = KeysAvailable[F]>(
+    add<F extends keyof KeysAvailable, A = KeysAvailable[F]>(
         key: F,
         value: A
     ): Promise<A>;
 
-     remove<F extends keyof KeysAvailable, A = KeysAvailable[F]>(
+    remove<F extends keyof KeysAvailable, A = KeysAvailable[F]>(
         key: F,
         value: A
     ): Promise<A>;
 
-     set<F extends keyof KeysAvailable, A = KeysAvailable[F]>(
+    set<F extends keyof KeysAvailable, A = KeysAvailable[F]>(
         key: F,
         value: A
     ): Promise<A>;
 }
-declare enum States {
+export declare enum STATES {
     "ON" = "on",
     "OFF" = "on",
     "CREATED" = "created",
     "SHUTTED" = "shutted",
     "WAITING" = "waiting",
 }
+
 type KeysAvailable = {
     blacklist: string[];
     prefix: string;

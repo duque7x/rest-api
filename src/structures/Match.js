@@ -8,7 +8,7 @@ class Match {
      * 
      * @param {*} data 
      */
-    constructor(data, rest) {
+    constructor(data, rest, guildId) {
         this.type = data.type;
         this.voiceChannels = data.voiceChannels;
         this.status = data.status;
@@ -22,6 +22,8 @@ class Match {
         this._id = data._id;
         this.#data = data;
         this.#rest = rest;
+
+        this.guildId = guildId;
     }
     get data() {
         return this.#data;
@@ -39,8 +41,9 @@ class Match {
             };
 
             for (let op in options) {
+                const route = Routes.guilds.matches.resource(this._id, op.toLowerCase(), this.guildId);
                 await this.#rest.request(
-                    "delete",
+                    "DELETE",
                     Routes.fields(Routes.fields(Routes.match(this._id), op.toLowerCase()))
                 );
                 this[op] = options[op];
@@ -48,21 +51,20 @@ class Match {
             return this;
         }
         if (typeof key !== "string") throw new Error("key must be a string");
-
-        const reset = await this.#rest.request(
-            "delete",
-            Routes.fields(Routes.fields(Routes.match(this._id), key.toLowerCase()))
-        );
+        const route = Routes.guilds.matches.resource(this._id, key.toLowerCase(), this.guildId);
+        const reset = await this.#rest.request("DELETE", route);
         this[key] = reset;
 
         return this;
     };
     async delete() {
-        await this.#rest.request("delete", Routes.match(this._id));
+        const route = Routes.guilds.matches.resource(this._id, key.toLowerCase(), this.guildId);
+        await this.#rest.request("DELETE", route);
         return;
     };
     async addPlayer(id, name) {
         if (!id) throw new Error("no id was provided")
+        const route = Routes.guilds.matches.resource(this._id, "players", this.guildId);
         const response = await this.#rest.request("post", Routes.match(this._id), { id, name });
 
         this.players = response;

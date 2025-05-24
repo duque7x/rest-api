@@ -1,23 +1,23 @@
+const { REST } = require("../rest/REST");
 const Routes = require("../rest/Routes");
 const assert = require('node:assert');
 
-class User {
+exports.BetUser = class {
   #rest;
   #data;
   /**
    * 
    * @param {*} data 
+   * @param {REST} rest
    */
   constructor(data, rest, guildId) {
     this.player = data.player;
-    this.points = data.points;
+    this.credit = data.credit;
     this.wins = data.wins;
     this.mvps = data.mvps;
     this.losses = data.losses;
-    this.gamesPlayed = data.gamesPlayed;
+    this.betsPlayed = data.betsPlayed;
     this.blacklisted = data.blacklisted;
-    this.protections = data.protections;
-    this.originalChannels = data.originalChannels;
     this.#rest = rest;
     this.#data = data;
 
@@ -30,39 +30,37 @@ class User {
     if (!key) {
       const options = {
         wins: 0,
-        points: 0,
+        credit: 0,
         losses: 0,
         mvps: 0,
-        gamesPlayed: [],
-        protections: [],
-        originalChannels: [],
-        blacklist: { blacklisted: false },
+        betsPlayed: [],
+        blacklist: false,
       };
 
       for (let op in options) {
-        const route = Routes.guilds.users.resource(this.player.id, op.toLowerCase(), this.guildId);
+        const route = Routes.guilds.betUsers.resource(this.player.id, op, this.guildId);
         await this.#rest.request("DELETE", route);
         this[op] = options[op];
       }
       return this;
     }
     if (typeof key !== "string") throw new Error("key must be a string");
-    this.#verifyField(key);
-    const route = Routes.guilds.users.resource(this.player.id, key.toLowerCase(), this.guildId);
-    const reset = await this.#rest.request("DELETE", route);
-    this[key] = reset;
 
+    this.#verifyField(key);
+    const route = Routes.guilds.betUsers.resource(this.player.id, op, this.guildId);
+    const reset = await this.#rest.request("DELETE", route);
+
+    this[key] = reset;
     return this;
   };
   async delete() {
-    const route = Routes.guilds.users.delete(this.player.id, this.guildId);
-    await this.#rest.request("delete", route);
+    const route = Routes.guilds.betUsers.delete(this.player.id, this.guildId);
+    await this.#rest.request("DELETE", route);
     return;
-
   };
   async add(field, amount = 1) {
     this.#verifyField(field);
-    const route = Routes.guilds.users.resource(this.player.id, field, this.guildId);
+    const route = Routes.guilds.betUsers.resource(this.player.id, field, this.guildId);
     const updatedField = await this.#rest.request("PATCH", route, { [field]: amount });
 
     this[field] = updatedField;
@@ -70,7 +68,7 @@ class User {
   };
   async remove(field, amount = 1) {
     this.#verifyField(field);
-    const route = Routes.guilds.users.resource(this.player.id, field, this.guildId);
+    const route = Routes.guilds.betUsers.resource(this.player.id, field, this.guildId);
     const updatedField = await this.#rest.request("PATCH", route, { [field]: -amount });
 
     this[field] = updatedField;
@@ -79,7 +77,7 @@ class User {
   async set(key, value) {
     if (typeof key !== "string") throw new Error("key must be a string");
     this.#verifyField(key);
-    const route = Routes.guilds.users.resource(this.player.id, field, this.guildId);
+    const route = Routes.guilds.betUsers.resource(this.player.id, key.toLowerCase(), this.guildId);
     const updatedField = await this.#rest.request("PATCH", route, { set: value });
 
     this[key] = updatedField;
@@ -88,15 +86,13 @@ class User {
   };
   #validFields = [
     "wins",
-    "points",
+    "credit",
     "losses",
     "mvps",
-    "gamesPlayed",
+    "betsPlayed",
     "blacklisted",
   ];
   #verifyField(field) {
     if (!this.#validFields.includes(field)) throw new Error(`Invalid field "${field}" for update`);
   }
 }
-
-module.exports = { User };

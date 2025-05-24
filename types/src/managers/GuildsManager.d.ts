@@ -3,7 +3,7 @@ import { REST } from "../rest/REST";
 import { Collection } from "../structures/Collection";
 import { Guild } from "../structures/Guild";
 
-export class GuildsRoutes {
+export class GuildsManager {
     constructor(rest: REST): void;
 
     async fetch(id: string): Promise<Guild>;
